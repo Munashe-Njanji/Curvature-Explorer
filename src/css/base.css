@@ -1,0 +1,83 @@
+/**
+ * Base Styles
+ * Reset, fonts, and root variables
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0c0d10;
+  --surface: #13151a;
+  --surface2: #1c1f28;
+  --border: #2a2d3a;
+  --border2: #3a3f52;
+  --text: #e8eaf2;
+  --muted: #7a7f99;
+  --curve: #4a9eff;
+  --tangent: #ff6b4a;
+  --normal: #4aff9e;
+  --point: #ffd166;
+  --accent: #a78bfa;
+  --success: #4ade80;
+  --error: #f87171;
+  --warning: #fbbf24;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Instrument Serif', serif;
+}
+
+[data-theme="light"] {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --surface2: #f1f3f5;
+  --border: #dee2e6;
+  --border2: #adb5bd;
+  --text: #212529;
+  --muted: #6c757d;
+  --curve: #0066cc;
+  --tangent: #dc3545;
+  --normal: #28a745;
+  --point: #fd7e14;
+  --accent: #6f42c1;
+  --success: #28a745;
+  --error: #dc3545;
+  --warning: #ffc107;
+}
+
+[data-theme="dark"] {
+  --bg: #0c0d10;
+  --surface: #13151a;
+  --surface2: #1c1f28;
+  --border: #2a2d3a;
+  --border2: #3a3f52;
+  --text: #e8eaf2;
+  --muted: #7a7f99;
+  --curve: #4a9eff;
+  --tangent: #ff6b4a;
+  --normal: #4aff9e;
+  --point: #ffd166;
+  --accent: #a78bfa;
+  --success: #4ade80;
+  --error: #f87171;
+  --warning: #fbbf24;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+  font-size: 12px;
+}
