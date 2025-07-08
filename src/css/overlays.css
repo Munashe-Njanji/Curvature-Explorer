@@ -1,0 +1,74 @@
+/**
+ * Overlay Components
+ * Tooltips and toasts
+ */
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 10px 13px;
+  max-width: 270px;
+  font-size: 10px;
+  color: var(--text);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.tooltip.vis {
+  opacity: 1;
+}
+
+.tooltip .tt-title {
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-family: var(--serif);
+  font-size: 13px;
+}
+
+.tooltip .tt-formula {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--point);
+  margin: 5px 0 2px;
+  font-size: 12px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 10px;
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateX(320px);
+  transition: transform 0.3s ease;
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast.success {
+  border-left-color: var(--success);
+}
+
+.toast.error {
+  border-left-color: var(--error);
+}
