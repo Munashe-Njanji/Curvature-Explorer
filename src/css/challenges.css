@@ -1,0 +1,122 @@
+/**
+ * Challenge System Styles
+ * Challenge box and achievements
+ */
+
+.challenge-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px;
+  display: none;
+}
+
+.challenge-box.active {
+  display: block;
+}
+
+.ch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ch-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ch-prompt {
+  font-size: 10px;
+  color: var(--text);
+  margin-bottom: 7px;
+  line-height: 1.5;
+}
+
+.ch-hint {
+  font-size: 9px;
+  color: var(--muted);
+  background: var(--surface2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 7px;
+  display: none;
+}
+
+.ch-hint.vis {
+  display: block;
+}
+
+.ch-status {
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.ch-status.pend {
+  background: var(--surface2);
+  color: var(--muted);
+}
+
+.ch-status.done {
+  background: rgba(74, 255, 158, 0.15);
+  color: var(--success);
+}
+
+.ch-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.ch-btn {
+  font-size: 9px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+.ch-btn.hint-b {
+  background: var(--surface2);
+  color: var(--muted);
+}
+
+.ch-btn.next-b {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Achievements */
+.achievements {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.ach {
+  font-size: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 2px 5px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ach.done {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(167, 139, 250, 0.1);
+}

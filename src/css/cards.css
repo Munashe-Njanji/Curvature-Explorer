@@ -1,0 +1,167 @@
+/**
+ * Card Components
+ * Equation cards, stats, and legend
+ */
+
+/* Equation Cards */
+.eq-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eq-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 11px;
+}
+
+.eq-card .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eq-card .label {
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.info-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: help;
+  font-size: 11px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.info-btn:hover {
+  background: var(--surface2);
+  color: var(--accent);
+}
+
+.eq-val {
+  font-size: 13px;
+  font-weight: 700;
+  min-height: 18px;
+  font-family: var(--serif);
+  font-style: italic;
+  margin-top: 3px;
+}
+
+.eq-sub {
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.eq-card.t .eq-val {
+  color: var(--tangent);
+}
+
+.eq-card.n .eq-val {
+  color: var(--normal);
+}
+
+.eq-card.g .eq-val {
+  color: var(--accent);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.stat {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 9px;
+  text-align: center;
+}
+
+.stat .sl {
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.stat .sv {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--serif);
+  color: var(--text);
+  word-break: break-all;
+}
+
+.stat.rising .sv {
+  color: var(--normal);
+}
+
+.stat.falling .sv {
+  color: var(--tangent);
+}
+
+.stat.critical .sv {
+  color: var(--point);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.leg-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.leg-line {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.leg-dash {
+  width: 22px;
+  border-top: 2px dashed;
+  flex-shrink: 0;
+}
+
+.leg-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  flex-shrink: 0;
+}
+
+.leg-grad {
+  width: 22px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, #ff6b4a, #ffd166, #4aff9e);
+}

@@ -1,0 +1,144 @@
+/**
+ * Function Selector Styles
+ * Accordion and function buttons
+ */
+
+.fn-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  transition: all 0.15s;
+  font-family: var(--mono);
+}
+
+.cat-header:hover {
+  color: var(--text);
+  border-color: var(--border2);
+}
+
+.cat-header.open {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(167, 139, 250, 0.07);
+}
+
+.cat-icon {
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+.cat-chevron {
+  font-size: 8px;
+  transition: transform 0.2s;
+  opacity: 0.6;
+}
+
+.cat-header.open .cat-chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.cat-body {
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 0 4px 8px;
+}
+
+.cat-body.open {
+  display: flex;
+}
+
+.fn-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: all 0.12s;
+}
+
+.fn-btn:hover {
+  background: var(--surface2);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.fn-btn.active {
+  background: rgba(167, 139, 250, 0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Custom Function Input */
+.custom-fn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.custom-fn input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.custom-fn input:focus {
+  border-color: var(--accent);
+}
+
+.custom-fn input::placeholder {
+  color: var(--muted);
+}
+
+.custom-fn button {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: var(--mono);
+}
+
+.custom-fn button:hover {
+  opacity: 0.88;
+}
+
+.hint {
+  font-size: 9px;
+  color: var(--muted);
+}
