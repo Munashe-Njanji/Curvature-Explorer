@@ -1,0 +1,22 @@
+/**
+ * Curve Explorer Pro - Main Stylesheet
+ * Modular CSS architecture
+ */
+
+/* Base styles and variables */
+@import url('base.css');
+
+/* Layout components */
+@import url('layout.css');
+@import url('sidebar.css');
+
+/* UI components */
+@import url('functions.css');
+@import url('cards.css');
+@import url('challenges.css');
+@import url('canvas.css');
+@import url('controls.css');
+@import url('overlays.css');
+
+/* Responsive design */
+@import url('responsive.css');
