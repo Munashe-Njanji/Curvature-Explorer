@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Curve Explorer Pro — Tangent, Normal & Derivatives</title>
+      <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script>
+      <link rel="stylesheet" href="src/css/styles.css">
+   </head>
+   <body>
+      <header>
+         <h1>Curve <span>Explorer</span> <span class="badge">PRO</span></h1>
+         <div class="header-actions">
+            <button class="btn" id="themeBtn" title="Toggle Theme">🌙</button>
+            <button class="btn" id="shareBtn">🔗 Share</button>
+         </div>
+      </header>
+      <div class="app">
+         <!-- ── Sidebar ── -->
+         <aside class="sidebar">
+            <!-- Function Categories -->
+            <div class="s-section">
+               <div class="s-title">Functions</div>
+               <div class="fn-accordion" id="fnAccordion"></div>
+            </div>
+            <!-- Custom Function -->
+            <div class="s-section">
+               <div class="s-title">Custom f(x)</div>
+               <div class="custom-fn">
+                  <input id="userFn" type="text" placeholder="e.g. x^2 + sin(x)" autocomplete="off" spellcheck="false"/>
+                  <button id="applyFn">Plot Function</button>
+                  <small class="hint">Use: sin cos tan log exp abs sqrt ^ · Use log() for ln</small>
+               </div>
+            </div>
+            <!-- Equations -->
+            <div class="s-section">
+               <div class="s-title">Equations at P</div>
+               <div class="eq-panel">
+                  <div class="eq-card t">
+                     <div class="row"><span class="label">Tangent Line</span><button class="info-btn" data-tip="tangent">ⓘ</button></div>
+                     <div class="eq-val" id="eqT">—</div>
+                     <div class="eq-sub">slope = f′(x₀)</div>
+                  </div>
+                  <div class="eq-card n">
+                     <div class="row"><span class="label">Normal Line</span><button class="info-btn" data-tip="normal">ⓘ</button></div>
+                     <div class="eq-val" id="eqN">—</div>
+                     <div class="eq-sub">slope = −1/f′(x₀)</div>
+                  </div>
+                  <div class="eq-card g">
+                     <div class="row"><span class="label">Derivative f′(x₀)</span><button class="info-btn" data-tip="gradient">ⓘ</button></div>
+                     <div class="eq-val" id="eqG">—</div>
+                     <div class="eq-sub">instantaneous rate of change</div>
+                  </div>
+               </div>
+            </div>
+            <!-- Stats -->
+            <div class="s-section">
+               <div class="s-title">Point Statistics</div>
+               <div class="stats-grid">
+                  <div class="stat">
+                     <div class="sl">x₀</div>
+                     <div class="sv" id="stX">—</div>
+                  </div>
+                  <div class="stat">
+                     <div class="sl">f(x₀)</div>
+                     <div class="sv" id="stY">—</div>
+                  </div>
+                  <div class="stat">
+                     <div class="sl">f′(x₀)</div>
+                     <div class="sv" id="stG">—</div>
+                  </div>
+                  <div class="stat">
+                     <div class="sl">f″(x₀)</div>
+                     <div class="sv" id="stG2">—</div>
+                  </div>
+                  <div class="stat">
+                     <div class="sl">Curvature κ</div>
+                     <div class="sv" id="stC">—</div>
+                  </div>
+                  <div class="stat" id="statStatus">
+                     <div class="sl">Behaviour</div>
+                     <div class="sv" id="stS">—</div>
+                  </div>
+               </div>
+            </div>
+            <!-- Legend -->
+            <div class="s-section">
+               <div class="s-title">Legend</div>
+               <div class="legend">
+                  <div class="leg-row">
+                     <div class="leg-line" style="background:var(--curve)"></div>
+                     Curve f(x)
+                  </div>
+                  <div class="leg-row">
+                     <div class="leg-line" style="background:var(--tangent)"></div>
+                     Tangent line
+                  </div>
+                  <div class="leg-row">
+                     <div class="leg-dash" style="border-color:var(--normal)"></div>
+                     Normal line
+                  </div>
+                  <div class="leg-row">
+                     <div class="leg-dot" style="background:var(--point)"></div>
+                     Point P — drag on canvas!
+                  </div>
+                  <div class="leg-row">
+                     <div class="leg-grad"></div>
+                     Gradient color map
+                  </div>
+               </div>
+            </div>
+            <!-- Challenge -->
+            <div class="s-section">
+               <div class="challenge-box" id="challengeBox">
+                  <div class="ch-header">
+                     <div class="ch-title">🎯 Challenge</div>
+                     <div class="achievements" id="achEl"></div>
+                  </div>
+                  <div class="ch-prompt" id="chPrompt">—</div>
+                  <div class="ch-hint" id="chHint">—</div>
+                  <span class="ch-status pend" id="chStatus">● In Progress</span>
+                  <div class="ch-actions">
+                     <button class="ch-btn hint-b" id="hintBtn">Show Hint</button>
+                     <button class="ch-btn next-b" id="nextChBtn">Next →</button>
+                  </div>
+               </div>
+            </div>
+         </aside>
+         <!-- ── Main ── -->
+         <main class="main">
+            <div class="canvas-section">
+               <div class="canvas-bar">
+                  <div class="canvas-bar-title">📈 <span id="fnLabel">f(x)</span></div>
+                  <div class="canvas-bar-controls">
+                     <div class="zoom-controls">
+                        <button class="zoom-btn" id="zoomOut" title="Zoom Out (Scroll Down)">−</button>
+                        <span class="zoom-level" id="zoomLevel">100%</span>
+                        <button class="zoom-btn" id="zoomIn" title="Zoom In (Scroll Up)">+</button>
+                        <button class="zoom-btn" id="zoomReset" title="Reset Zoom (Double Click)">⟲</button>
+                     </div>
+                     <div class="view-btns">
+                        <button class="vbtn active" data-view="main">Main</button>
+                        <button class="vbtn" data-view="dual">+ f′(x)</button>
+                     </div>
+                  </div>
+               </div>
+               <div class="canvas-wrap" id="mainWrap">
+                  <canvas id="cvs"></canvas>
+               </div>
+               <div id="deriv-panel">
+                  <div class="dpanel-bar">
+                     <span>📊 Derivative <strong>f′(x)</strong></span>
+                     <span id="derivReadout">f′(x₀) = —</span>
+                  </div>
+                  <canvas id="dcvs"></canvas>
+               </div>
+            </div>
+            <!-- Slider -->
+            <div class="slider-bar">
+               <div class="slider-row">
+                  <span class="slider-label">Point x₀</span>
+                  <span class="slider-x" id="xRead">x₀ = 0.0000</span>
+                  <div class="slider-btns">
+                     <button class="btn" id="animBtn">▶ Animate</button>
+                     <button class="btn primary" id="challengeBtn">🎯 Challenge</button>
+                  </div>
+               </div>
+               <input type="range" id="xSlider" min="-3" max="3" step="0.005" value="1">
+               <div class="range-labels"><span id="rMin">−3.00</span><span id="rMax">3.00</span></div>
+            </div>
+         </main>
+      </div>
+      <!-- Tooltip -->
+      <div class="tooltip" id="tooltip">
+         <div class="tt-title" id="ttTitle"></div>
+         <div id="ttBody"></div>
+         <div class="tt-formula" id="ttFormula"></div>
+      </div>
+      <!-- Toast -->
+      <div class="toast" id="toast">
+         <span id="toastMsg">—</span>
+      </div>
+
+      <!-- Load all JavaScript modules -->
+      <script src="src/js/config/functions.js"></script>
+      <script src="src/js/config/tooltips.js"></script>
+      <script src="src/js/config/challenges.js"></script>
+      <script src="src/js/config/achievements.js"></script>
+      <script src="src/js/core/state.js"></script>
+      <script src="src/js/core/utils.js"></script>
+      <script src="src/js/core/parser.js"></script>
+      <script src="src/js/core/function.js"></script>
+      <script src="src/js/rendering/coordinates.js"></script>
+      <script src="src/js/rendering/static.js"></script>
+      <script src="src/js/rendering/dynamic.js"></script>
+      <script src="src/js/rendering/derivative.js"></script>
+      <script src="src/js/rendering/main.js"></script>
+      <script src="src/js/interactions/autopan.js"></script>
+      <script src="src/js/interactions/canvas.js"></script>
+      <script src="src/js/interactions/zoom.js"></script>
+      <script src="src/js/ui/colors.js"></script>
+      <script src="src/js/ui/sidebar.js"></script>
+      <script src="src/js/ui/slider.js"></script>
+      <script src="src/js/ui/theme.js"></script>
+      <script src="src/js/features/features.js"></script>
+
+      <script>
+         // Initialize application
+         function init() {
+            initTheme();
+            buildSidebar();
+            setupInteraction();
+            initFeatures();
+            
+            // Set default function
+            const defaultFn = CATEGORIES[0].fns[1]; // quad
+            setFn(defaultFn);
+            unlock('first');
+            
+            // Initial draw
+            scheduleRedraw();
+         }
+
+         window.addEventListener('load', init);
+      </script>
+   </body>
+</html>
