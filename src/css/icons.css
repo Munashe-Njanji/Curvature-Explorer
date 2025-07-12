@@ -1,0 +1,92 @@
+/**
+ * Icon System Styles
+ * SVG icon styling and sizing
+ */
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.icon svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+}
+
+/* Icon sizes */
+.icon-xs svg {
+  width: 0.75em;
+  height: 0.75em;
+}
+
+.icon-sm svg {
+  width: 0.875em;
+  height: 0.875em;
+}
+
+.icon-lg svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.icon-xl svg {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+/* Category icons in accordion */
+.cat-icon .icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Achievement icons */
+.ach .icon svg {
+  width: 10px;
+  height: 10px;
+}
+
+/* Button icons */
+.btn .icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Header icons */
+header .icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Challenge title icons */
+.ch-title .icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Canvas bar icons */
+.canvas-bar-title .icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Ensure icons inherit color */
+.icon svg {
+  color: inherit;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* Special styling for filled icons */
+.icon svg[fill="currentColor"] {
+  stroke: none;
+}
+
+/* Special styling for outlined icons */
+.icon svg[fill="none"] {
+  fill: none;
+}
