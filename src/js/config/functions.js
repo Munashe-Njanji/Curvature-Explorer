@@ -6,7 +6,7 @@
 // ── Function Categories ─────────────────────────────────────────────
          const CATEGORIES = [
            {
-             name:'Polynomial', icon:'🔢',
+             name:'Polynomial', icon:'numbers',
              fns:[
                {key:'lin',  label:'2x − 1',           expr:'2*x - 1',              xmin:-4,          xmax:4},
                {key:'quad', label:'x² − 2x − 1',      expr:'x^2 - 2*x - 1',       xmin:-1.5,        xmax:3.8},
@@ -17,7 +17,7 @@
              ]
            },
            {
-             name:'Trigonometric', icon:'〜',
+             name:'Trigonometric', icon:'wave',
              fns:[
                {key:'sin',   label:'sin(x)',            expr:'sin(x)',               xmin:-Math.PI*1.2, xmax:Math.PI*1.2},
                {key:'cos',   label:'cos(x)',            expr:'cos(x)',               xmin:-Math.PI*1.2, xmax:Math.PI*1.2},
@@ -31,7 +31,7 @@
              ]
            },
            {
-             name:'Exponential & Log', icon:'📈',
+             name:'Exponential & Log', icon:'chartUp',
              fns:[
                {key:'expx',  label:'eˣ',               expr:'exp(x)',               xmin:-2.5,        xmax:2.5},
                {key:'expm',  label:'e^(−x²)  Gaussian', expr:'exp(-x^2)',            xmin:-3,          xmax:3},
@@ -43,7 +43,7 @@
              ]
            },
            {
-             name:'Rational', icon:'➗',
+             name:'Rational', icon:'divide',
              fns:[
                {key:'inv',   label:'1/x',              expr:'1/x',                  xmin:0.2,         xmax:5},
                {key:'rat1',  label:'x/(1+x²)',         expr:'x/(1+x^2)',            xmin:-4,          xmax:4},
@@ -53,7 +53,7 @@
              ]
            },
            {
-             name:'Hyperbolic', icon:'∞',
+             name:'Hyperbolic', icon:'infinity',
              fns:[
                {key:'sinh',  label:'sinh(x)',          expr:'sinh(x)',              xmin:-2.5,        xmax:2.5},
                {key:'cosh',  label:'cosh(x)',          expr:'cosh(x)',              xmin:-2.5,        xmax:2.5},
@@ -61,7 +61,7 @@
              ]
            },
            {
-             name:'Special & Composite', icon:'✦',
+             name:'Special & Composite', icon:'sparkle',
              fns:[
                {key:'sqrt',  label:'√x',              expr:'sqrt(x)',              xmin:0,           xmax:5},
                {key:'cbrt',  label:'x^(1/3)',         expr:'x^(1/3)',              xmin:-3,          xmax:3},
