@@ -80,15 +80,21 @@
            sSt.style.borderColor=color.hslBorder;
 
            if(Math.abs(g)<0.08){
-             sEl.textContent='⊙ Critical';
+             sEl.innerHTML = '';
+             sEl.appendChild(createIcon('target'));
+             sEl.appendChild(document.createTextNode(' Critical'));
              sEl.style.color=color.hsl;
              sSt.classList.add('critical');
            } else if(g>0){
-             sEl.textContent='↗ Rising';
+             sEl.innerHTML = '';
+             sEl.appendChild(createIcon('arrowUp'));
+             sEl.appendChild(document.createTextNode(' Rising'));
              sEl.style.color=color.hsl;
              sSt.classList.add('rising');
            } else {
-             sEl.textContent='↘ Falling';
+             sEl.innerHTML = '';
+             sEl.appendChild(createIcon('arrowDown'));
+             sEl.appendChild(document.createTextNode(' Falling'));
              sEl.style.color=color.hsl;
              sSt.classList.add('falling');
            }
