@@ -37,11 +37,12 @@ function applyTheme(theme) {
 
 function updateThemeButton(theme) {
     const btn = document.getElementById('themeBtn');
+    btn.innerHTML = '';
     if (theme === 'light') {
-        btn.textContent = '☀️';
+        btn.appendChild(createIcon('sun'));
         btn.title = 'Switch to Dark Mode';
     } else {
-        btn.textContent = '🌙';
+        btn.appendChild(createIcon('moon'));
         btn.title = 'Switch to Light Mode';
     }
 }
@@ -54,7 +55,10 @@ function cycleTheme() {
     updateThemeButton(next);
     S.staticDirty = true;
     scheduleRedraw();
-    showToast(`${next==='dark'?'🌙':'☀️'} ${next.charAt(0).toUpperCase()+next.slice(1)} mode activated`, 'success');
+    const toastMsg = document.createElement('span');
+    toastMsg.appendChild(createIcon(next==='dark'?'moon':'sun'));
+    toastMsg.appendChild(document.createTextNode(` ${next.charAt(0).toUpperCase()+next.slice(1)} mode activated`));
+    showToast(toastMsg.innerHTML, 'success');
 }
 
 function initThemeButton(){

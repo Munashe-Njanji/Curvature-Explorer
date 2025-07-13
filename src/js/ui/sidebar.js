@@ -12,7 +12,20 @@
 
              const hdr=document.createElement('button');
              hdr.className='cat-header'+(ci===0?' open':'');
-             hdr.innerHTML=`<span><span class="cat-icon">${cat.icon}</span>${cat.name}</span><span class="cat-chevron">▼</span>`;
+             const iconSpan = document.createElement('span');
+             iconSpan.className = 'cat-icon';
+             iconSpan.appendChild(createIcon(cat.icon));
+             const nameSpan = document.createElement('span');
+             nameSpan.textContent = cat.name;
+             const leftSpan = document.createElement('span');
+             leftSpan.appendChild(iconSpan);
+             leftSpan.appendChild(document.createTextNode(' '));
+             leftSpan.appendChild(nameSpan);
+             const chevron = document.createElement('span');
+             chevron.className = 'cat-chevron';
+             chevron.textContent = '▼';
+             hdr.appendChild(leftSpan);
+             hdr.appendChild(chevron);
              hdr.onclick=()=>{
                const isOpen=hdr.classList.contains('open');
                // Close all
