@@ -10,7 +10,7 @@
              f=fnDef.f; expr=fnDef.expr||fnDef.label;
            } else {
              const p=PARSER.parse(fnDef.expr||fnDef.label);
-             if(!p){showToast('❌ Parse error','error');return false;}
+             if(!p){showToast('x Parse error','error');return false;}
              f=p.f; expr=p.expr;
            }
            S.fn={
