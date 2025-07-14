@@ -10,7 +10,10 @@ function unlock(id){
   try{localStorage.setItem('cepro_ach',JSON.stringify([...S.achUnlocked]));}catch{}
   const def=ACHIEVEMENT_DEFS[id];
   if(def){
-    showToast(`${def.icon} ${def.name}: ${def.desc}`,'success');
+    const toastMsg = document.createElement('span');
+    toastMsg.appendChild(createIcon(def.icon));
+    toastMsg.appendChild(document.createTextNode(` ${def.name}: ${def.desc}`));
+    showToast(toastMsg.innerHTML,'success');
   }
   renderAch();
 }
@@ -22,7 +25,7 @@ function renderAch(){
     const d=document.createElement('div');
     d.className='ach'+(S.achUnlocked.has(id)?' done':'');
     d.title=def.desc;
-    d.textContent=def.icon;
+    d.appendChild(createIcon(def.icon, 'icon-xs'));
     el.appendChild(d);
   });
 }
@@ -58,11 +61,26 @@ function initShare(){
     navigator.clipboard.writeText(url).then(()=>{
       const btn=document.getElementById('shareBtn');
       btn.classList.add('success');
-      btn.textContent='✓ Copied!';
+      btn.innerHTML = '';
+      btn.appendChild(createIcon('check'));
+      btn.appendChild(document.createTextNode(' Copied!'));
       unlock('share');
-      showToast('🔗 Link copied!','success');
-      setTimeout(()=>{btn.classList.remove('success');btn.textContent='🔗 Share';},2200);
-    }).catch(()=>showToast('❌ Copy failed','error'));
+      const toastMsg = document.createElement('span');
+      toastMsg.appendChild(createIcon('link'));
+      toastMsg.appendChild(document.createTextNode(' Link copied!'));
+      showToast(toastMsg.innerHTML,'success');
+      setTimeout(()=>{
+        btn.classList.remove('success');
+        btn.innerHTML = '';
+        btn.appendChild(createIcon('link'));
+        btn.appendChild(document.createTextNode(' Share'));
+      },2200);
+    }).catch(()=>{
+      const toastMsg = document.createElement('span');
+      toastMsg.appendChild(createIcon('x'));
+      toastMsg.appendChild(document.createTextNode(' Copy failed'));
+      showToast(toastMsg.innerHTML,'error');
+    });
   });
 }
 
@@ -96,7 +114,13 @@ function loadURL(){
 let toastTimer=null;
 function showToast(msg,type=''){
   const el=document.getElementById('toast');
-  document.getElementById('toastMsg').textContent=msg;
+  const msgEl = document.getElementById('toastMsg');
+  // Check if msg is HTML string or plain text
+  if(typeof msg === 'string' && msg.includes('<')) {
+    msgEl.innerHTML = msg;
+  } else {
+    msgEl.textContent = msg;
+  }
   el.className='toast '+(type||'')+' show';
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
@@ -110,7 +134,7 @@ function initChallenges(){
     box.classList.toggle('active',S.challengeActive);
     if(S.challengeActive) loadChallenge(S.currChallenge);
     document.getElementById('challengeBtn').textContent=
-      S.challengeActive?'✕ Close':'🎯 Challenge';
+      S.challengeActive?'close Close':'target Challenge';
   });
   
   document.getElementById('hintBtn').addEventListener('click',()=>{
@@ -129,17 +153,29 @@ function loadChallenge(i){
   document.getElementById('chPrompt').textContent=ch.prompt;
   document.getElementById('chHint').textContent=ch.hint;
   document.getElementById('chHint').classList.remove('vis');
-  setChStatus('pend','● In Progress');
+  const statusEl = document.getElementById('chStatus');
+  statusEl.className = 'ch-status pend';
+  statusEl.innerHTML = '';
+  statusEl.appendChild(createIcon('circle', 'icon-xs'));
+  statusEl.appendChild(document.createTextNode(' In Progress'));
 }
 
 function checkChallenge(x0){
   if(!S.fn||!S.challengeActive) return;
   const ch=CHALLENGES[S.currChallenge];
   if(ch.check(S.fn,x0)){
-    setChStatus('done','✓ Solved!');
+    const statusEl = document.getElementById('chStatus');
+    statusEl.className = 'ch-status done';
+    statusEl.innerHTML = '';
+    statusEl.appendChild(createIcon('check', 'icon-xs'));
+    statusEl.appendChild(document.createTextNode(' Solved!'));
     if(ch.ach) unlock(ch.ach.id);
   } else {
-    setChStatus('pend','● In Progress');
+    const statusEl = document.getElementById('chStatus');
+    statusEl.className = 'ch-status pend';
+    statusEl.innerHTML = '';
+    statusEl.appendChild(createIcon('circle', 'icon-xs'));
+    statusEl.appendChild(document.createTextNode(' In Progress'));
   }
 }
 
@@ -155,7 +191,13 @@ function initCustomFunction(){
     const expr=document.getElementById('userFn').value.trim();
     if(!expr) return;
     const p=PARSER.parse(expr);
-    if(!p){showToast('❌ Invalid expression. Try: x^2, sin(x), exp(-x^2)','error');return;}
+    if(!p){
+      const toastMsg = document.createElement('span');
+      toastMsg.appendChild(createIcon('x'));
+      toastMsg.appendChild(document.createTextNode(' Invalid expression. Try: x^2, sin(x), exp(-x^2)'));
+      showToast(toastMsg.innerHTML,'error');
+      return;
+    }
     const fn={
       key:'custom',label:expr,expr:p.expr,
       f:p.f,
@@ -168,7 +210,10 @@ function initCustomFunction(){
       unlock('custom');
       S.fnCount++;
       if(S.fnCount>=10) unlock('cat10');
-      showToast('✨ Custom function loaded!','success');
+      const toastMsg = document.createElement('span');
+      toastMsg.appendChild(createIcon('sparkle'));
+      toastMsg.appendChild(document.createTextNode(' Custom function loaded!'));
+      showToast(toastMsg.innerHTML,'success');
     }
   });
   document.getElementById('userFn').addEventListener('keydown',e=>{
@@ -197,11 +242,17 @@ function initAnimation(){
     if(S.isAnim){
       S.isAnim=false;
       cancelAnimationFrame(S.animRaf);
-      document.getElementById('animBtn').textContent='▶ Animate';
+      const btn = document.getElementById('animBtn');
+      btn.innerHTML = '';
+      btn.appendChild(createIcon('play'));
+      btn.appendChild(document.createTextNode(' Animate'));
       return;
     }
     S.isAnim=true;
-    document.getElementById('animBtn').textContent='⏸ Pause';
+    const btn = document.getElementById('animBtn');
+    btn.innerHTML = '';
+    btn.appendChild(createIcon('pause'));
+    btn.appendChild(document.createTextNode(' Pause'));
     const fn=S.fn;
     const start=S.x0;
     let t0=null;
