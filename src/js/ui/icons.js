@@ -188,6 +188,14 @@ function initIcons() {
   const challengeIcon = document.querySelector('.challenge-icon');
   if (challengeIcon) challengeIcon.replaceWith(createIcon('target'));
   
+  // Initialize challenge status icon
+  const chStatus = document.querySelector('#chStatus .icon');
+  if (chStatus) chStatus.replaceWith(createIcon('circle', 'icon-xs'));
+  
+  // Initialize next button icon
+  const nextBtn = document.querySelector('#nextChBtn .icon');
+  if (nextBtn) nextBtn.replaceWith(createIcon('arrowRight', 'icon-xs'));
+  
   // Replace emojis in the entire document
   replaceEmojisWithIcons(document.body);
 }

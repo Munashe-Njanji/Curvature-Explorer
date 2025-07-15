@@ -104,7 +104,7 @@
              const y1=fn.f(x1), y2=fn.f(x2);
              if(!isFinite(y1)||!isFinite(y2)) continue;
              const gmid=fn.df((x1+x2)/2);
-             // Map atan(g) in [-π/2,π/2] to hue 0..120 (red→yellow→green)
+             // Map atan(g) in [-pi/2,pi/2] to hue 0..120 (red to yellow to green)
              const t=(Math.atan(gmid/2)/Math.PI+0.5);
              const hue=t*120;
              const lightness=S.currentTheme==='light'?45:58;

@@ -18,6 +18,6 @@
            gradient:{
              title:'Derivative f′(x₀)',
              body:'Instantaneous rate of change. Positive: rising. Negative: falling. Zero: critical point.',
-             formula:"f′(x₀) = lim[h→0] (f(x₀+h)−f(x₀)) / h"
+             formula:"f′(x₀) = lim[h to 0] (f(x₀+h)−f(x₀)) / h"
            }
          };

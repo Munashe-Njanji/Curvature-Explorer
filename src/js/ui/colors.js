@@ -5,7 +5,7 @@
 
 // ── UI Updates ───────────────────────────────────────────────────────
          function getGradientColor(g){
-           // Map atan(g) in [-π/2,π/2] to hue 0..120 (red→yellow→green)
+           // Map atan(g) in [-pi/2,pi/2] to hue 0..120 (red to yellow to green)
            const t=(Math.atan(g/2)/Math.PI+0.5);
            const hue=t*120;
            const lightness=S.currentTheme==='light'?45:58;

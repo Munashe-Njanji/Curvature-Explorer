@@ -158,6 +158,11 @@ function loadChallenge(i){
   statusEl.innerHTML = '';
   statusEl.appendChild(createIcon('circle', 'icon-xs'));
   statusEl.appendChild(document.createTextNode(' In Progress'));
+  
+  // Update next button
+  const nextBtn = document.getElementById('nextChBtn');
+  nextBtn.innerHTML = 'Next ';
+  nextBtn.appendChild(createIcon('arrowRight', 'icon-xs'));
 }
 
 function checkChallenge(x0){
