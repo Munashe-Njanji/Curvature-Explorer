@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="curveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#1e1b4b" stroke="url(#curveGrad)" stroke-width="3"/>
+  
+  <!-- Mathematical curve (sine-like wave) -->
+  <path d="M 15 50 Q 25 25, 35 35 T 55 50 T 75 35 T 85 50" 
+        fill="none" 
+        stroke="url(#curveGrad)" 
+        stroke-width="3.5" 
+        stroke-linecap="round"/>
+  
+  <!-- Tangent line -->
+  <line x1="35" y1="20" x2="65" y2="65" 
+        stroke="#22d3ee" 
+        stroke-width="2.5" 
+        stroke-linecap="round"/>
+  
+  <!-- Point on curve -->
+  <circle cx="50" cy="50" r="5" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
+  
+  <!-- Derivative symbol f' -->
+  <text x="72" y="25" 
+        font-family="serif" 
+        font-size="18" 
+        font-style="italic" 
+        fill="#22d3ee" 
+        font-weight="bold">f'</text>
+</svg>
