@@ -4,6 +4,11 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Curve Explorer Pro — Tangent, Normal & Derivatives</title>
+      
+      <!-- Favicons -->
+      <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+      <link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg" media="(prefers-color-scheme: light)">
+      <link rel="apple-touch-icon" href="assets/favicon.svg">
       <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script>
       <link rel="stylesheet" href="src/css/styles.css">
    </head>
@@ -12,6 +17,7 @@
          <h1>Curve <span>Explorer</span> <span class="badge">PRO</span></h1>
          <div class="header-actions">
             <button class="btn" id="themeBtn" title="Toggle Theme"></button>
+            <button class="btn" id="challengeBtn"><span class="challenge-icon"></span> Challenges</button>
             <button class="btn" id="shareBtn"><span class="btn-icon"></span> Share</button>
          </div>
       </header>
@@ -109,22 +115,6 @@
                   </div>
                </div>
             </div>
-            <!-- Challenge -->
-            <div class="s-section">
-               <div class="challenge-box" id="challengeBox">
-                  <div class="ch-header">
-                     <div class="ch-title"><span class="ch-icon"></span> Challenge</div>
-                     <div class="achievements" id="achEl"></div>
-                  </div>
-                  <div class="ch-prompt" id="chPrompt">—</div>
-                  <div class="ch-hint" id="chHint">—</div>
-                  <span class="ch-status pend" id="chStatus"><span class="icon icon-xs"></span> In Progress</span>
-                  <div class="ch-actions">
-                     <button class="ch-btn hint-b" id="hintBtn">Show Hint</button>
-                     <button class="ch-btn next-b" id="nextChBtn">Next <span class="icon icon-xs"></span></button>
-                  </div>
-               </div>
-            </div>
          </aside>
          <!-- ── Main ── -->
          <main class="main">
@@ -155,6 +145,24 @@
                   <canvas id="dcvs"></canvas>
                </div>
             </div>
+            <!-- Challenge Box -->
+            <div class="challenge-box" id="challengeBox" style="display: none;">
+               <div class="ch-header">
+                  <div class="ch-title"><span class="ch-icon"></span> Challenge <span class="ch-number" id="chNumber">1/25</span></div>
+                  <div class="ch-actions-inline">
+                     <button class="ch-btn hint-b" id="hintBtn">Hint</button>
+                     <button class="ch-btn next-b" id="nextChBtn">Next <span class="icon icon-xs"></span></button>
+                     <div class="achievements" id="achEl"></div>
+                  </div>
+               </div>
+               <div class="ch-prompt" id="chPrompt">—</div>
+               <div class="ch-progress" id="chProgressBar">
+                  <div class="ch-progress-fill"></div>
+                  <div class="ch-progress-percent">0%</div>
+               </div>
+               <div class="ch-hint" id="chHint">—</div>
+               <span class="ch-status pend" id="chStatus"><span class="icon icon-xs"></span> In Progress</span>
+            </div>
             <!-- Slider -->
             <div class="slider-bar">
                <div class="slider-row">
@@ -162,7 +170,6 @@
                   <span class="slider-x" id="xRead">x₀ = 0.0000</span>
                   <div class="slider-btns">
                      <button class="btn" id="animBtn"><span class="anim-icon"></span> Animate</button>
-                     <button class="btn primary" id="challengeBtn"><span class="challenge-icon"></span> Challenge</button>
                   </div>
                </div>
                <input type="range" id="xSlider" min="-3" max="3" step="0.005" value="1">
