@@ -16,6 +16,8 @@
       <header>
          <h1>Curve <span>Explorer</span> <span class="badge">PRO</span></h1>
          <div class="header-actions">
+            <button class="btn" id="multiFnBtn" title="Multi-Function Mode"><span class="multi-icon"></span> Multi</button>
+            <button class="btn" id="integralBtn" title="Toggle Integral Visualization"><span class="integral-icon"></span> Integral</button>
             <button class="btn" id="themeBtn" title="Toggle Theme"></button>
             <button class="btn" id="challengeBtn"><span class="challenge-icon"></span> Challenges</button>
             <button class="btn" id="shareBtn"><span class="btn-icon"></span> Share</button>
@@ -144,6 +146,18 @@
                   </div>
                   <canvas id="dcvs"></canvas>
                </div>
+               <div class="multi-panel" id="multi-panel" style="display: none;">
+                  <div class="multi-header">
+                     <span class="multi-title">Multi-Function Comparison</span>
+                     <div class="multi-controls">
+                        <button class="btn-sm" id="addFnBtn">+ Add Function</button>
+                        <button class="btn-sm" id="clearMultiBtn">Clear All</button>
+                     </div>
+                  </div>
+                  <div class="multi-fn-list" id="multiFnList">
+                     <div class="multi-empty">Click "+ Add Function" to compare multiple curves</div>
+                  </div>
+               </div>
             </div>
             <!-- Challenge Box -->
             <div class="challenge-box" id="challengeBox" style="display: none;">
@@ -189,45 +203,64 @@
       </div>
 
       <!-- Load all JavaScript modules -->
-      <script src="src/js/config/functions.js"></script>
-      <script src="src/js/config/tooltips.js"></script>
-      <script src="src/js/config/challenges.js"></script>
-      <script src="src/js/config/achievements.js"></script>
-      <script src="src/js/core/state.js"></script>
-      <script src="src/js/core/utils.js"></script>
-      <script src="src/js/core/parser.js"></script>
-      <script src="src/js/core/function.js"></script>
-      <script src="src/js/rendering/coordinates.js"></script>
-      <script src="src/js/rendering/static.js"></script>
-      <script src="src/js/rendering/dynamic.js"></script>
-      <script src="src/js/rendering/derivative.js"></script>
-      <script src="src/js/rendering/main.js"></script>
-      <script src="src/js/interactions/autopan.js"></script>
-      <script src="src/js/interactions/canvas.js"></script>
-      <script src="src/js/interactions/zoom.js"></script>
-      <script src="src/js/ui/colors.js"></script>
-      <script src="src/js/ui/sidebar.js"></script>
-      <script src="src/js/ui/slider.js"></script>
-      <script src="src/js/ui/theme.js"></script>
-      <script src="src/js/ui/icons.js"></script>
-      <script src="src/js/features/features.js"></script>
+      <script src="src/js/config/functions.js?v=2"></script>
+      <script src="src/js/config/tooltips.js?v=2"></script>
+      <script src="src/js/config/challenges.js?v=2"></script>
+      <script src="src/js/config/achievements.js?v=2"></script>
+      <script src="src/js/core/state.js?v=2"></script>
+      <script src="src/js/core/utils.js?v=2"></script>
+      <script src="src/js/core/parser.js?v=2"></script>
+      <script src="src/js/core/function.js?v=2"></script>
+      <script src="src/js/rendering/coordinates.js?v=2"></script>
+      <script src="src/js/rendering/static.js?v=2"></script>
+      <script src="src/js/rendering/dynamic.js?v=2"></script>
+      <script src="src/js/rendering/derivative.js?v=2"></script>
+      <script src="src/js/rendering/multi.js?v=2"></script>
+      <script src="src/js/rendering/main.js?v=2"></script>
+      <script src="src/js/interactions/autopan.js?v=2"></script>
+      <script src="src/js/interactions/canvas.js?v=2"></script>
+      <script src="src/js/interactions/zoom.js?v=2"></script>
+      <script src="src/js/ui/colors.js?v=2"></script>
+      <script src="src/js/ui/sidebar.js?v=2"></script>
+      <script src="src/js/ui/slider.js?v=2"></script>
+      <script src="src/js/ui/theme.js?v=2"></script>
+      <script src="src/js/ui/icons.js?v=2"></script>
+      <script src="src/js/features/features.js?v=2"></script>
 
       <script>
          // Initialize application
          function init() {
-            initTheme();
-            initIcons(); // Initialize icon system
-            buildSidebar();
-            setupInteraction();
-            initFeatures();
-            
-            // Set default function
-            const defaultFn = CATEGORIES[0].fns[1]; // quad
-            setFn(defaultFn);
-            unlock('first');
-            
-            // Initial draw
-            scheduleRedraw();
+            console.log('=== APP INIT START ===');
+            try {
+               initTheme();
+               console.log('✓ Theme initialized');
+               
+               initIcons();
+               console.log('✓ Icons initialized');
+               
+               buildSidebar();
+               console.log('✓ Sidebar built');
+               
+               setupInteraction();
+               console.log('✓ Interaction setup');
+               
+               initFeatures();
+               console.log('✓ Features initialized');
+               
+               // Set default function
+               const defaultFn = CATEGORIES[0].fns[1]; // quad
+               setFn(defaultFn);
+               unlock('first');
+               console.log('✓ Default function set');
+               
+               // Initial draw
+               scheduleRedraw();
+               console.log('✓ Initial draw scheduled');
+               
+               console.log('=== APP INIT COMPLETE ===');
+            } catch(err) {
+               console.error('ERROR during init:', err);
+            }
          }
 
          window.addEventListener('load', init);
