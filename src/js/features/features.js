@@ -128,13 +128,23 @@ function showToast(msg,type=''){
 
 // ── Challenge System ──────────────────────────────────────────────────
 function initChallenges(){
+  // Challenge button in navbar toggles visibility
   document.getElementById('challengeBtn').addEventListener('click',()=>{
-    S.challengeActive=!S.challengeActive;
-    const box=document.getElementById('challengeBox');
-    box.classList.toggle('active',S.challengeActive);
-    if(S.challengeActive) loadChallenge(S.currChallenge);
-    document.getElementById('challengeBtn').textContent=
-      S.challengeActive?'close Close':'target Challenge';
+    S.challengeActive = !S.challengeActive;
+    const box = document.getElementById('challengeBox');
+    const btn = document.getElementById('challengeBtn');
+    
+    if(S.challengeActive){
+      box.style.display = 'block';
+      btn.classList.add('active');
+      loadChallenge(S.currChallenge);
+    } else {
+      box.style.display = 'none';
+      btn.classList.remove('active');
+      S.challengeSolved = false;
+      S.challengeProgress = 0;
+      scheduleRedraw(); // Remove visual hints
+    }
   });
   
   document.getElementById('hintBtn').addEventListener('click',()=>{
@@ -149,10 +159,41 @@ function initChallenges(){
 }
 
 function loadChallenge(i){
-  const ch=CHALLENGES[i];
+  // Check if challenge is applicable to current function
+  const ch = CHALLENGES[i];
+  if(S.fn && ch.isApplicable && !ch.isApplicable(S.fn)){
+    // Skip to next applicable challenge
+    const startIdx = i;
+    let attempts = 0;
+    while(attempts < CHALLENGES.length){
+      i = (i + 1) % CHALLENGES.length;
+      attempts++;
+      const nextCh = CHALLENGES[i];
+      if(!nextCh.isApplicable || nextCh.isApplicable(S.fn)){
+        S.currChallenge = i;
+        loadChallenge(i);
+        return;
+      }
+    }
+    // If no applicable challenge found, show message
+    const toastMsg = document.createElement('span');
+    toastMsg.appendChild(createIcon('info'));
+    toastMsg.appendChild(document.createTextNode(' No applicable challenges for this function. Try a different curve!'));
+    showToast(toastMsg.innerHTML,'');
+    return;
+  }
+  
   document.getElementById('chPrompt').textContent=ch.prompt;
   document.getElementById('chHint').textContent=ch.hint;
   document.getElementById('chHint').classList.remove('vis');
+  
+  // Update challenge number
+  document.getElementById('chNumber').textContent = `${i+1}/${CHALLENGES.length}`;
+  
+  // Reset challenge state
+  S.challengeSolved = false;
+  S.challengeProgress = 0;
+  
   const statusEl = document.getElementById('chStatus');
   statusEl.className = 'ch-status pend';
   statusEl.innerHTML = '';
@@ -163,24 +204,97 @@ function loadChallenge(i){
   const nextBtn = document.getElementById('nextChBtn');
   nextBtn.innerHTML = 'Next ';
   nextBtn.appendChild(createIcon('arrowRight', 'icon-xs'));
+  
+  // Update progress bar
+  updateChallengeProgress(0);
+  
+  // Show helpful toast
+  const toastMsg = document.createElement('span');
+  toastMsg.appendChild(createIcon('target'));
+  toastMsg.appendChild(document.createTextNode(` Challenge ${i+1}/${CHALLENGES.length}: Move the slider to explore.`));
+  showToast(toastMsg.innerHTML,'');
+  
+  // Redraw to show visual hints
+  scheduleRedraw();
 }
 
 function checkChallenge(x0){
   if(!S.fn||!S.challengeActive) return;
   const ch=CHALLENGES[S.currChallenge];
+  
+  // Calculate progress
+  const prevProgress = S.challengeProgress;
+  if(ch.progress){
+    S.challengeProgress = Math.max(0, Math.min(1, ch.progress(S.fn, x0)));
+    updateChallengeProgress(S.challengeProgress);
+    
+    // Provide feedback when crossing thresholds
+    if(!S.challengeSolved){
+      if(prevProgress < 0.5 && S.challengeProgress >= 0.5){
+        const toastMsg = document.createElement('span');
+        toastMsg.appendChild(createIcon('arrowUp'));
+        toastMsg.appendChild(document.createTextNode(' Getting warmer...'));
+        showToast(toastMsg.innerHTML,'');
+      } else if(prevProgress < 0.8 && S.challengeProgress >= 0.8){
+        const toastMsg = document.createElement('span');
+        toastMsg.appendChild(createIcon('zap'));
+        toastMsg.appendChild(document.createTextNode(' Very close!'));
+        showToast(toastMsg.innerHTML,'');
+      }
+    }
+  }
+  
+  // Check if solved
   if(ch.check(S.fn,x0)){
-    const statusEl = document.getElementById('chStatus');
-    statusEl.className = 'ch-status done';
-    statusEl.innerHTML = '';
-    statusEl.appendChild(createIcon('check', 'icon-xs'));
-    statusEl.appendChild(document.createTextNode(' Solved!'));
-    if(ch.ach) unlock(ch.ach.id);
+    if(!S.challengeSolved){
+      S.challengeSolved = true;
+      S.challengeProgress = 1;
+      
+      const statusEl = document.getElementById('chStatus');
+      statusEl.className = 'ch-status done';
+      statusEl.innerHTML = '';
+      statusEl.appendChild(createIcon('check', 'icon-xs'));
+      statusEl.appendChild(document.createTextNode(' Solved!'));
+      
+      updateChallengeProgress(1);
+      
+      if(ch.ach) unlock(ch.ach.id);
+      
+      // Celebration toast
+      const toastMsg = document.createElement('span');
+      toastMsg.appendChild(createIcon('star'));
+      toastMsg.appendChild(document.createTextNode(' Challenge completed!'));
+      showToast(toastMsg.innerHTML,'success');
+    }
   } else {
-    const statusEl = document.getElementById('chStatus');
-    statusEl.className = 'ch-status pend';
-    statusEl.innerHTML = '';
-    statusEl.appendChild(createIcon('circle', 'icon-xs'));
-    statusEl.appendChild(document.createTextNode(' In Progress'));
+    if(S.challengeSolved){
+      S.challengeSolved = false;
+      const statusEl = document.getElementById('chStatus');
+      statusEl.className = 'ch-status pend';
+      statusEl.innerHTML = '';
+      statusEl.appendChild(createIcon('circle', 'icon-xs'));
+      statusEl.appendChild(document.createTextNode(' In Progress'));
+    }
+  }
+}
+
+function updateChallengeProgress(progress){
+  const progressBar = document.getElementById('chProgressBar');
+  if(!progressBar) return;
+  
+  const fill = progressBar.querySelector('.ch-progress-fill');
+  const percent = progressBar.querySelector('.ch-progress-percent');
+  
+  if(fill){
+    fill.style.width = (progress * 100) + '%';
+    fill.style.background = progress > 0.8 ? 
+      'linear-gradient(90deg, rgba(74, 255, 158, 0.8), rgba(74, 255, 158, 1))' :
+      'linear-gradient(90deg, rgba(167, 139, 250, 0.6), rgba(167, 139, 250, 0.9))';
+  }
+  
+  if(percent){
+    percent.textContent = Math.round(progress * 100) + '%';
+    percent.style.color = progress > 0.8 ? 'var(--success)' : 'var(--accent)';
   }
 }
 
@@ -235,9 +349,262 @@ function initViewToggle(){
       btn.classList.add('active');
       S.view=v;
       const dp=document.getElementById('deriv-panel');
-      dp.style.display=v==='dual'?'block':'none';
-      if(v==='dual') drawDerivPanel();
+      
+      // Hide derivative panel for main view
+      dp.style.display='none';
+      
+      // Show derivative panel for dual view
+      if(v==='dual') {
+        dp.style.display='block';
+        drawDerivPanel();
+      }
+      
+      S.staticDirty=true;
+      scheduleRedraw();
     });
+  });
+}
+
+// ── Multi-Function Controls ──────────────────────────────────────────
+function initMultiFunction(){
+  console.log('=== initMultiFunction START ===');
+  
+  const multiFnBtn = document.getElementById('multiFnBtn');
+  const integralBtn = document.getElementById('integralBtn');
+  const addBtn = document.getElementById('addFnBtn');
+  const clearBtn = document.getElementById('clearMultiBtn');
+  const mp = document.getElementById('multi-panel');
+  const dp = document.getElementById('deriv-panel');
+  
+  console.log('Elements found:', {
+    multiFnBtn: !!multiFnBtn,
+    integralBtn: !!integralBtn,
+    addBtn: !!addBtn,
+    clearBtn: !!clearBtn,
+    mp: !!mp,
+    dp: !!dp
+  });
+  
+  if(!multiFnBtn) {
+    console.error('CRITICAL: multiFnBtn not found!');
+    return;
+  }
+  
+  // Multi-function mode toggle
+  function toggleMulti() {
+    try {
+      console.log('toggleMulti called, current multiMode:', S.multiMode);
+      S.multiMode = !S.multiMode;
+      
+      console.log('Setting active class, multiMode now:', S.multiMode);
+      if(S.multiMode) {
+        multiFnBtn.classList.add('active');
+      } else {
+        multiFnBtn.classList.remove('active');
+      }
+      
+      if(S.multiMode) {
+        // Enter multi-function mode
+        console.log('Entering multi mode');
+        S.view = 'multi';
+        if(mp) {
+          mp.style.display = 'block';
+          console.log('Multi-panel shown');
+        }
+        if(dp) {
+          dp.style.display = 'block';
+          console.log('Deriv-panel shown');
+        }
+        
+        // Deactivate view buttons
+        document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('active'));
+        
+        // Add current function if none added yet
+        if(S.multiFns.length === 0 && S.fn) {
+          console.log('Auto-adding current function:', S.fn.label);
+          S.multiFns.push(S.fn);
+          updateMultiFunctionList();
+        }
+        
+        showToast('Multi-function mode enabled', 'success');
+        
+        if(S.multiFns.length > 0 && typeof drawMultiDerivPanel === 'function') {
+          drawMultiDerivPanel();
+        }
+      } else {
+        // Exit multi-function mode
+        console.log('Exiting multi mode');
+        S.view = 'main';
+        if(mp) {
+          mp.style.display = 'none';
+          console.log('Multi-panel hidden');
+        }
+        if(dp) {
+          dp.style.display = 'none';
+          console.log('Deriv-panel hidden');
+        }
+        
+        // Reactivate main view button
+        const mainBtn = document.querySelector('.vbtn[data-view="main"]');
+        if(mainBtn) mainBtn.classList.add('active');
+        
+        showToast('Multi-function mode disabled', '');
+      }
+      
+      S.staticDirty = true;
+      scheduleRedraw();
+      console.log('toggleMulti complete');
+    } catch(err) {
+      console.error('Error in toggleMulti:', err);
+    }
+  }
+  
+  // Integral visualization toggle
+  function toggleIntegral() {
+    try {
+      console.log('toggleIntegral called, current showIntegral:', S.showIntegral);
+      S.showIntegral = !S.showIntegral;
+      if(integralBtn) {
+        if(S.showIntegral) {
+          integralBtn.classList.add('active');
+        } else {
+          integralBtn.classList.remove('active');
+        }
+      }
+      S.staticDirty = true;
+      scheduleRedraw();
+      
+      showToast(S.showIntegral ? 'Integral visualization shown' : 'Integral visualization hidden', S.showIntegral ? 'success' : '');
+    } catch(err) {
+      console.error('Error in toggleIntegral:', err);
+    }
+  }
+  
+  // Attach event listeners
+  multiFnBtn.addEventListener('click', function(e) {
+    console.log('Multi button clicked!', e);
+    toggleMulti();
+  });
+  console.log('✓ Multi button listener attached');
+  
+  if(integralBtn) {
+    integralBtn.addEventListener('click', toggleIntegral);
+    console.log('✓ Integral button listener attached');
+  }
+  
+  // Make functions globally accessible for fallback
+  window.toggleMulti = toggleMulti;
+  window.toggleIntegral = toggleIntegral;
+  console.log('✓ Global functions set');
+  
+  // Add function button
+  if(addBtn) {
+    addBtn.addEventListener('click', () => {
+      console.log('Add function button clicked');
+      if(!S.fn) {
+        showToast('Select a function first', '');
+        return;
+      }
+      
+      if(S.multiFns.length >= 3) {
+        showToast('Maximum 3 functions', '');
+        return;
+      }
+      
+      // Check if function already added
+      if(S.multiFns.some(f => f.key === S.fn.key && f.label === S.fn.label)) {
+        showToast('Function already added', '');
+        return;
+      }
+      
+      S.multiFns.push(S.fn);
+      updateMultiFunctionList();
+      S.staticDirty = true;
+      scheduleRedraw();
+      
+      showToast(`Added ${S.fn.label}`, 'success');
+      
+      // Show derivative panel if functions added
+      if(S.multiFns.length > 0 && S.multiMode && typeof drawMultiDerivPanel === 'function') {
+        drawMultiDerivPanel();
+      }
+    });
+    console.log('✓ Add button listener attached');
+  } else {
+    console.warn('addFnBtn not found');
+  }
+  
+  // Clear all button
+  if(clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      console.log('Clear all button clicked');
+      if(S.multiFns.length === 0) return;
+      
+      S.multiFns = [];
+      updateMultiFunctionList();
+      S.staticDirty = true;
+      scheduleRedraw();
+      
+      showToast('Cleared all functions', '');
+    });
+    console.log('✓ Clear button listener attached');
+  } else {
+    console.warn('clearMultiBtn not found');
+  }
+  
+  console.log('=== initMultiFunction COMPLETE ===');
+}
+
+function updateMultiFunctionList(){
+  const list = document.getElementById('multiFnList');
+  if(!list) return;
+  
+  list.innerHTML = '';
+  
+  if(S.multiFns.length === 0) {
+    list.innerHTML = '<div class="multi-empty">Click "+ Add Function" to compare multiple curves</div>';
+    return;
+  }
+  
+  S.multiFns.forEach((fn, idx) => {
+    // Check if getMultiColor is available
+    let color;
+    if(typeof getMultiColor === 'function') {
+      color = getMultiColor(idx, S.currentTheme);
+    } else {
+      // Fallback colors
+      const colors = ['hsl(210,88%,58%)', 'hsl(330,88%,58%)', 'hsl(150,88%,58%)'];
+      color = { hsl: colors[idx % 3] };
+    }
+    
+    const item = document.createElement('div');
+    item.className = 'multi-fn-item';
+    item.style.borderLeft = `4px solid ${color.hsl}`;
+    
+    const label = document.createElement('span');
+    label.className = 'multi-fn-label';
+    label.textContent = fn.label;
+    label.style.color = color.hsl;
+    
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'multi-fn-remove';
+    removeBtn.innerHTML = '×';
+    removeBtn.title = 'Remove function';
+    removeBtn.addEventListener('click', () => {
+      S.multiFns.splice(idx, 1);
+      updateMultiFunctionList();
+      S.staticDirty = true;
+      scheduleRedraw();
+      
+      // Update derivative panel
+      if(S.multiFns.length > 0 && S.multiMode && typeof drawMultiDerivPanel === 'function') {
+        drawMultiDerivPanel();
+      }
+    });
+    
+    item.appendChild(label);
+    item.appendChild(removeBtn);
+    list.appendChild(item);
   });
 }
 
@@ -287,21 +654,29 @@ function initResizeObserver(){
 
 // ── Initialize All Features ───────────────────────────────────────────
 function initFeatures(){
+  console.log('=== initFeatures START ===');
+  
   // Load saved achievements
   try{
     const saved=JSON.parse(localStorage.getItem('cepro_ach')||'[]');
     saved.forEach(id=>S.achUnlocked.add(id));
-  }catch{}
+    console.log('✓ Achievements loaded');
+  }catch(e){
+    console.warn('Achievement load failed:', e);
+  }
   
-  renderAch();
-  initTooltips();
-  initShare();
-  initChallenges();
-  initCustomFunction();
-  initViewToggle();
-  initAnimation();
-  initSlider();
-  initResizeObserver();
-  initThemeButton();
-  loadURL();
+  try { renderAch(); console.log('✓ renderAch'); } catch(e) { console.error('renderAch failed:', e); }
+  try { initTooltips(); console.log('✓ initTooltips'); } catch(e) { console.error('initTooltips failed:', e); }
+  try { initShare(); console.log('✓ initShare'); } catch(e) { console.error('initShare failed:', e); }
+  try { initChallenges(); console.log('✓ initChallenges'); } catch(e) { console.error('initChallenges failed:', e); }
+  try { initCustomFunction(); console.log('✓ initCustomFunction'); } catch(e) { console.error('initCustomFunction failed:', e); }
+  try { initViewToggle(); console.log('✓ initViewToggle'); } catch(e) { console.error('initViewToggle failed:', e); }
+  try { initAnimation(); console.log('✓ initAnimation'); } catch(e) { console.error('initAnimation failed:', e); }
+  try { initSlider(); console.log('✓ initSlider'); } catch(e) { console.error('initSlider failed:', e); }
+  try { initResizeObserver(); console.log('✓ initResizeObserver'); } catch(e) { console.error('initResizeObserver failed:', e); }
+  try { initThemeButton(); console.log('✓ initThemeButton'); } catch(e) { console.error('initThemeButton failed:', e); }
+  try { initMultiFunction(); console.log('✓ initMultiFunction'); } catch(e) { console.error('initMultiFunction failed:', e); }
+  try { loadURL(); console.log('✓ loadURL'); } catch(e) { console.error('loadURL failed:', e); }
+  
+  console.log('=== initFeatures COMPLETE ===');
 }
