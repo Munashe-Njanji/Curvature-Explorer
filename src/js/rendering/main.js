@@ -10,7 +10,7 @@
          const dctx=dcvs.getContext('2d');
 
          function draw(){
-           if(!S.fn) return;
+           if(!S.fn && S.multiFns.length === 0) return;
            const dpr=window.devicePixelRatio||1;
            const wrap=document.getElementById('mainWrap');
            const W=wrap.clientWidth;
@@ -23,19 +23,34 @@
              cvs.style.height=H+'px';
              cvs.width=pw; cvs.height=ph;
              ctx.setTransform(dpr,0,0,dpr,0,0);
-             buildStatic(W,H,dpr);
+             
+             // Use multi-function rendering if in multi mode and has functions
+             if(S.multiMode && S.multiFns.length > 0 && typeof buildStaticMulti === 'function') {
+               buildStaticMulti(W,H,dpr);
+             } else if(S.fn) {
+               buildStatic(W,H,dpr);
+             }
              S.staticDirty=false;
            }
 
            // Blit static layer
            ctx.clearRect(0,0,W,H);
-           ctx.drawImage(S.offscreen,0,0,W,H);
+           if(S.offscreen) {
+             ctx.drawImage(S.offscreen,0,0,W,H);
+           }
 
            // Dynamic elements on top
-           drawDynamic(ctx,W,H);
+           if(S.fn || S.multiFns.length > 0) {
+             drawDynamic(ctx,W,H);
+           }
 
            // Derivative panel if visible
-           if(S.view==='dual') drawDerivPanel();
+           if(S.view==='dual' && typeof drawDerivPanel === 'function') {
+             drawDerivPanel();
+           }
+           if(S.multiMode && S.multiFns.length > 0 && typeof drawMultiDerivPanel === 'function') {
+             drawMultiDerivPanel();
+           }
          }
 
          function scheduleRedraw(){
