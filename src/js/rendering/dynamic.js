@@ -6,7 +6,60 @@
 // ── Dynamic Drawing ──────────────────────────────────────────────────
          function drawDynamic(ctx, W, H){
            const fn=S.fn, c=S.coord;
-           if(!fn||!c) return;
+           if(!c) return;
+           
+           // In multi-function mode, draw point markers for all functions
+           if(S.multiMode && S.multiFns.length > 0) {
+             const x0=S.x0;
+             
+             S.multiFns.forEach((multiFn, idx) => {
+               const y0=multiFn.f(x0);
+               if(!isFinite(y0)) return;
+               
+               const [ox,oy]=c.toS(x0,y0);
+               const g=multiFn.df(x0);
+               const color=getMultiColor(idx, S.currentTheme);
+               
+               // Point glow
+               ctx.save();
+               const grd=ctx.createRadialGradient(ox,oy,0,ox,oy,12);
+               grd.addColorStop(0,color.hsl.replace('hsl','hsla').replace(')',',0.3)'));
+               grd.addColorStop(1,color.hsl.replace('hsl','hsla').replace(')',',0)'));
+               ctx.beginPath(); ctx.arc(ox,oy,12,0,Math.PI*2);
+               ctx.fillStyle=grd; ctx.fill();
+               ctx.restore();
+               
+               // Point marker
+               ctx.save();
+               ctx.beginPath(); ctx.arc(ox,oy,6,0,Math.PI*2);
+               ctx.fillStyle=color.hsl; ctx.fill();
+               const bgColor=S.currentTheme==='light'?'#ffffff':'#0c0d10';
+               ctx.strokeStyle=bgColor; ctx.lineWidth=2; ctx.stroke();
+               ctx.restore();
+               
+               // Point label
+               ctx.save(); 
+               ctx.font='500 8px "JetBrains Mono"';
+               ctx.fillStyle=color.hsl;
+               ctx.textAlign='center'; 
+               ctx.textBaseline='bottom';
+               ctx.fillText(`${multiFn.label}`, ox, oy-10);
+               ctx.restore();
+             });
+             
+             return;
+           }
+           
+           // Single function mode - full visualization
+           if(!fn) return;
+
+           // Draw challenge visual hints if active
+           if(S.challengeActive && !S.challengeSolved){
+             const ch = CHALLENGES[S.currChallenge];
+             if(ch.visualHint){
+               ch.visualHint(fn, c, ctx);
+             }
+           }
 
            // Don't clamp x0 - let it be anywhere in the function's domain
            const x0=S.x0;
@@ -163,6 +216,31 @@
            ctx.textAlign=g>=0?'left':'right'; ctx.textBaseline='bottom';
            ctx.fillText(`P(${fmtN(x0,3)}, ${fmtN(y0,3)})`,lblX,oy-10);
            ctx.restore();
+
+           // Challenge progress ring around point
+           if(S.challengeActive && S.challengeProgress > 0 && !S.challengeSolved){
+             ctx.save();
+             const ringRadius = 12;
+             const progress = S.challengeProgress;
+             const startAngle = -Math.PI / 2;
+             const endAngle = startAngle + (Math.PI * 2 * progress);
+             
+             // Background ring
+             ctx.beginPath();
+             ctx.arc(ox, oy, ringRadius, 0, Math.PI * 2);
+             ctx.strokeStyle = 'rgba(167, 139, 250, 0.15)';
+             ctx.lineWidth = 3;
+             ctx.stroke();
+             
+             // Progress ring
+             ctx.beginPath();
+             ctx.arc(ox, oy, ringRadius, startAngle, endAngle);
+             ctx.strokeStyle = progress > 0.8 ? 'rgba(74, 255, 158, 0.8)' : 'rgba(167, 139, 250, 0.6)';
+             ctx.lineWidth = 3;
+             ctx.lineCap = 'round';
+             ctx.stroke();
+             ctx.restore();
+           }
 
            // Update UI panels
            updateUI(x0,y0,g,g2);
