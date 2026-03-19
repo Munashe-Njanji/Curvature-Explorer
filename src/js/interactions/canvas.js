@@ -17,8 +17,11 @@ function setupInteraction(){
            }
 
            function isNearPoint(canvasX){
-             if(!S.coord||!S.fn) return false;
-             const [ppx]=S.coord.toS(S.x0,S.fn.f(S.x0));
+             if(!S.coord) return false;
+             // Check if we have either a single function or multi functions
+             const fn = S.fn || (S.multiFns.length > 0 ? S.multiFns[0] : null);
+             if(!fn) return false;
+             const [ppx]=S.coord.toS(S.x0,fn.f(S.x0));
              return Math.abs(canvasX-ppx)<20;
            }
 
@@ -72,7 +75,9 @@ function setupInteraction(){
 
            window.addEventListener('mousemove',e=>{
              if(!dragging){
-               if(S.coord&&S.fn){
+               // Check if we have a function (single or multi mode)
+               const hasFunction = S.fn || (S.multiFns && S.multiFns.length > 0);
+               if(S.coord && hasFunction){
                  const coords=getCanvasCoords(e);
                  // Show grab cursor when holding modifier, otherwise show crosshair for point placement
                  if(e.shiftKey||e.ctrlKey||e.metaKey){
