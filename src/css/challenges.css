@@ -7,45 +7,98 @@
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 11px;
-  display: none;
+  padding: 14px 16px;
+  margin: 0 0 12px 0;
+  transition: all 0.3s ease;
 }
 
 .challenge-box.active {
-  display: block;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(167, 139, 250, 0.15);
 }
 
 .ch-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .ch-title {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--accent);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+}
+
+.ch-number {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.ch-actions-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .ch-prompt {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text);
-  margin-bottom: 7px;
+  margin-bottom: 10px;
   line-height: 1.5;
+  font-weight: 500;
+}
+
+.ch-progress {
+  position: relative;
+  height: 24px;
+  background: var(--surface2);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+
+.ch-progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, rgba(167, 139, 250, 0.6), rgba(167, 139, 250, 0.9));
+  transition: width 0.3s ease, background 0.3s ease;
+  border-radius: 12px;
+}
+
+.ch-progress-percent {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  z-index: 1;
+  text-shadow: 0 0 4px var(--bg), 0 0 8px var(--bg);
+  transition: color 0.3s ease;
 }
 
 .ch-hint {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--muted);
   background: var(--surface2);
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-bottom: 7px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
   display: none;
+  line-height: 1.4;
 }
 
 .ch-hint.vis {
@@ -53,9 +106,9 @@
 }
 
 .ch-status {
-  font-size: 9px;
-  padding: 3px 8px;
-  border-radius: 4px;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 5px;
   font-weight: 600;
   display: inline-block;
 }
@@ -68,6 +121,22 @@
 .ch-status.done {
   background: rgba(74, 255, 158, 0.15);
   color: var(--success);
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(74, 255, 158, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(74, 255, 158, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(74, 255, 158, 0);
+  }
 }
 
 .ch-actions {
@@ -77,18 +146,28 @@
 }
 
 .ch-btn {
-  font-size: 9px;
-  padding: 4px 10px;
-  border-radius: 4px;
+  font-size: 10px;
+  padding: 5px 12px;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
   font-weight: 600;
   font-family: var(--mono);
+  transition: all 0.2s ease;
+}
+
+.ch-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .ch-btn.hint-b {
   background: var(--surface2);
-  color: var(--muted);
+  color: var(--text);
+}
+
+.ch-btn.hint-b:hover {
+  background: var(--border);
 }
 
 .ch-btn.next-b {
