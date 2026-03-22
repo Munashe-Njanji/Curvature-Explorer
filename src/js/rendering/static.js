@@ -67,27 +67,29 @@
            oct.textAlign='left'; oct.textBaseline='bottom'; oct.fillText('y',axc+4,c.pad.t);
            oct.restore();
 
-           // Shaded area under curve
-           oct.save();
-           // Clip to drawing area
-           oct.beginPath();
-           oct.rect(c.pad.l, c.pad.t, W-c.pad.l-c.pad.r, H-c.pad.t-c.pad.b);
-           oct.clip();
+           // Shaded area under curve (integral visualization)
+           if(S.showIntegral) {
+             oct.save();
+             // Clip to drawing area
+             oct.beginPath();
+             oct.rect(c.pad.l, c.pad.t, W-c.pad.l-c.pad.r, H-c.pad.t-c.pad.b);
+             oct.clip();
 
-           oct.beginPath();
-           const N=400;
-           for(let i=0;i<=N;i++){
-             const xi=c.xmin+(c.xmax-c.xmin)*i/N;
-             const yi=fn.f(xi);
-             if(!isFinite(yi)) continue;
-             const [px,py]=c.toS(xi,yi);
-             i===0?oct.moveTo(px,py):oct.lineTo(px,py);
+             oct.beginPath();
+             const N=400;
+             for(let i=0;i<=N;i++){
+               const xi=c.xmin+(c.xmax-c.xmin)*i/N;
+               const yi=fn.f(xi);
+               if(!isFinite(yi)) continue;
+               const [px,py]=c.toS(xi,yi);
+               i===0?oct.moveTo(px,py):oct.lineTo(px,py);
+             }
+             const [,pyZ]=c.toS(0,0);
+             const [xlS]=c.toS(c.xmin,0); const [xrS]=c.toS(c.xmax,0);
+             oct.lineTo(xrS,ayc); oct.lineTo(xlS,ayc); oct.closePath();
+             oct.fillStyle=curveShade; oct.fill();
+             oct.restore();
            }
-           const [,pyZ]=c.toS(0,0);
-           const [xlS]=c.toS(c.xmin,0); const [xrS]=c.toS(c.xmax,0);
-           oct.lineTo(xrS,ayc); oct.lineTo(xlS,ayc); oct.closePath();
-           oct.fillStyle=curveShade; oct.fill();
-           oct.restore();
 
            // Colored curve (gradient-mapped)
            oct.save();
