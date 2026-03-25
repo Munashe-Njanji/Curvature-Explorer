@@ -128,3 +128,14 @@ input[type="range"]::-moz-range-thumb {
   color: var(--bg);
   border-color: var(--success);
 }
+
+.btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn.active:hover {
+  opacity: 0.9;
+}

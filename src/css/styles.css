@@ -18,6 +18,7 @@
 @import url('controls.css');
 @import url('overlays.css');
 @import url('icons.css');
+@import url('multi.css');
 
 /* Responsive design */
 @import url('responsive.css');

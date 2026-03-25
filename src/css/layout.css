@@ -50,6 +50,12 @@ header h1 span {
   gap: 6px;
 }
 
+.header-actions .btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
 .main {
   flex: 1;
   display: flex;
