@@ -1,0 +1,45 @@
+{
+  "name": "curve-explorer-pro",
+  "version": "2.0.0",
+  "description": "Interactive calculus visualization tool for exploring mathematical functions, derivatives, tangent lines, and advanced calculus concepts. Features multi-function comparison, real-time derivative visualization, and educational challenge system.",
+  "keywords": [
+    "calculus",
+    "mathematics",
+    "visualization",
+    "derivative",
+    "tangent-line",
+    "function-graphing",
+    "educational-software",
+    "interactive-learning",
+    "math-education",
+    "STEM",
+    "canvas",
+    "javascript",
+    "calculus-visualization",
+    "curve-analysis",
+    "mathematical-graphing",
+    "derivative-calculator",
+    "function-explorer",
+    "educational-tool",
+    "learning-platform",
+    "math-visualization"
+  ],
+  "homepage": "https://github.com/Munashe-Njanji/Curvature-Explorer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Munashe-Njanji/Curvature-Explorer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Munashe-Njanji/Curvature-Explorer/issues"
+  },
+  "author": "Munashe Njanji",
+  "license": "MIT",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
